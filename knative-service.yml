@@ -1,0 +1,29 @@
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    app.quarkus.io/quarkus-version: 3.10.0
+  labels:
+    app.kubernetes.io/name: knative-chat-bot
+    app.kubernetes.io/version: 1.0
+  name: knative-chat-bot
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/window: 10s
+    spec:
+      containers:
+        - env:
+            - name: QUARKUS_REDIS_HOSTS
+              value: changeme
+            - name: QUARKUS_LANGCHAIN4J_OPENAI_API_KEY
+              value: changeme
+          image: docker.io/sebi2706/knative-chat-bot:1.0
+          imagePullPolicy: Always
+          name: knative-chat-bot
+          ports:
+            - containerPort: 8080
+              name: http1
+              protocol: TCP
